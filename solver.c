@@ -6,8 +6,80 @@ int lc_to_cel(int ligne, int colonne){
 	return b + a*3;
 }
 
+// return 1 si le tableau est bon, 0 sinon
+int check (int tableau[81]){
+	int probleme_trouve = 0;
+	//check lignes
+	for (int ligne = 0; ligne < 9; ++ligne){
+		int tab[9] = {};
+		for (int colonne = 0; colonne < 9; ++colonne){
+			for (int i = 0; i < 9; ++i){
+				if (tableau[ligne*9 + colonne] == tab[i]){
+					printf("%d\n", tableau[ligne*9 + colonne]);
+					for (int effefe = 0; effefe < 9; ++effefe){
+						printf("%d ", tab[effefe]);
+					}
+					probleme_trouve = 1;
+					printf("ligne:%d colonne:%d\n", ligne, colonne);
+					return 0;
+				}
+			}
+			tab[colonne] = tableau[ligne*9 + colonne];
+		}
+	}
+
+	//check colonnes
+	for (int colonne = 0; colonne < 9; ++colonne){
+		int tab[9] = {};
+		for (int ligne = 0; ligne < 9; ++ligne){
+			for (int i = 0; i < 9; ++i){
+				if (tableau[ligne*9 + colonne] == tab[i]){
+					probleme_trouve = 1;
+					printf("colonne:%d ligne:%d\n", colonne, ligne);
+					return 0;
+				}
+			}
+			tab[ligne] = tableau[ligne*9 + colonne];
+		}
+	}
+
+	//check cellules
+	for (int ligne = 0; ligne < 3; ++ligne){
+		for (int colonne = 0; colonne < 3; ++colonne){
+			int tab[9] = {};
+			for (int i = 0; i < 3; ++i){
+				for (int j = 0; j < 3; ++j){
+					for (int k = 0; k < 9; ++k){
+						if (tableau[(ligne*3+i)*9 + colonne*3 + j] == tab[k]){
+							probleme_trouve = 1;
+							printf("sddds\n");
+							return 0;
+						}
+					}
+					tab[i*3 +j] = tableau[(ligne*3+i)*9 + colonne*3 + j];
+				}
+			}
+		}
+	}
+	return 1;
+}
+
 int main(int argc, char const *argv[])
-{
+{	
+	int tab[81] = {8,2,7, 1,5,4, 3,9,6,
+				  9,6,5, 3,2,7, 1,4,8,
+				  3,4,1, 6,8,9, 7,5,2,
+
+				  5,9,3, 4,12,8, 2,7,1,
+				  4,7,2, 5,1,3, 6,8,9,
+				  6,1,8, 9,7,2, 4,3,5,
+
+				  7,8,12, 2,6,5, 9,1,4,
+				  1,5,4, 7,9,6, 8,2,3,
+				  2,3,9, 8,4,1, 5,6,7};
+	printf("%d\n", check(tab));
+
+	/*
 	char tab[81];
 	int end = 0;
 
@@ -170,7 +242,7 @@ int main(int argc, char const *argv[])
 	}
 */
 
-
+/*
 	//affichage tab
 	for (int i = 0; i < 81; ++i)
 	{
@@ -183,6 +255,6 @@ int main(int argc, char const *argv[])
 		printf("%c", tab[i]);
 	}
 	printf("\n");
-
+*/
 	return 0;
 }
