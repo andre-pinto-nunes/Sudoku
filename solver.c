@@ -1,12 +1,17 @@
 #include <stdio.h>
 
+int lc_to_cel(int ligne, int colonne){
+	int a = ligne / 3;
+	int b = colonne / 3;
+	return b + a*3;
+}
 
 int main(int argc, char const *argv[])
 {
 	char tab[81];
 	int end = 0;
 
-	FILE* file = fopen("sudoku.txt", "r");
+	FILE* file = fopen("sudoku2.txt", "r");
 	
 	//creation tab
 	for (int i = 0; i < 81; ++i)
@@ -16,12 +21,24 @@ int main(int argc, char const *argv[])
 		if (c == ' ' || c == '\n')
 			i--;
 		else if (c == 'X')
-			tab[i] = '0';
+			tab[i] = 0;
 		else{
-			tab[i] = c;
+			tab[i] = c - '0';
 			end += c - '0';
 		}
 	}
+
+	for (int i = 0; i < 81; ++i)
+	{
+		if (!(i%3) && (i%9))
+			printf(" ");
+		else if(!(i%9) && i)
+			printf("\n");
+		if (!(i%27) && i)
+			printf("\n");
+		printf("%d", tab[i]);
+	}
+	printf("\n");
 
 
 	char* colonne_0[9] = {&tab[0+0], &tab[1*9+0], &tab[2*9+0], &tab[3*9+0], &tab[4*9+0], &tab[5*9+0], &tab[6*9+0], &tab[7*9+0], &tab[8*9+0]};
@@ -33,6 +50,7 @@ int main(int argc, char const *argv[])
 	char* colonne_6[9] = {&tab[0+6], &tab[1*9+6], &tab[2*9+6], &tab[3*9+6], &tab[4*9+6], &tab[5*9+6], &tab[6*9+6], &tab[7*9+6], &tab[8*9+6]};
 	char* colonne_7[9] = {&tab[0+7], &tab[1*9+7], &tab[2*9+7], &tab[3*9+7], &tab[4*9+7], &tab[5*9+7], &tab[6*9+7], &tab[7*9+7], &tab[8*9+7]};
 	char* colonne_8[9] = {&tab[0+8], &tab[1*9+8], &tab[2*9+8], &tab[3*9+8], &tab[4*9+8], &tab[5*9+8], &tab[6*9+8], &tab[7*9+8], &tab[8*9+8]};
+	char** colonnes[9] = {colonne_0, colonne_1, colonne_2, colonne_3, colonne_4, colonne_5, colonne_6, colonne_7, colonne_8};
 
 	char* ligne_0[9] = {&tab[0+0*9], &tab[1+0*9], &tab[2+0*9], &tab[3+0*9], &tab[4+0*9], &tab[5+0*9], &tab[6+0*9], &tab[7+0*9], &tab[8+0*9]};
 	char* ligne_1[9] = {&tab[0+1*9], &tab[1+1*9], &tab[2+1*9], &tab[3+1*9], &tab[4+1*9], &tab[5+1*9], &tab[6+1*9], &tab[7+1*9], &tab[8+1*9]};
@@ -43,6 +61,7 @@ int main(int argc, char const *argv[])
 	char* ligne_6[9] = {&tab[0+6*9], &tab[1+6*9], &tab[2+6*9], &tab[3+6*9], &tab[4+6*9], &tab[5+6*9], &tab[6+6*9], &tab[7+6*9], &tab[8+6*9]};
 	char* ligne_7[9] = {&tab[0+7*9], &tab[1+7*9], &tab[2+7*9], &tab[3+7*9], &tab[4+7*9], &tab[5+7*9], &tab[6+7*9], &tab[7+7*9], &tab[8+7*9]};
 	char* ligne_8[9] = {&tab[0+8*9], &tab[1+8*9], &tab[2+8*9], &tab[3+8*9], &tab[4+8*9], &tab[5+8*9], &tab[6+8*9], &tab[7+8*9], &tab[8+8*9]};
+	char** lignes[9] = {ligne_0, ligne_1, ligne_2, ligne_3, ligne_4, ligne_5, ligne_6, ligne_7, ligne_8};
 
 	char* cellule_00[9] = {&tab[0*9+0+0], &tab[0*9+1+0], &tab[0*9+2+0], &tab[1*9+0+0], &tab[1*9+1+0], &tab[1*9+2+0], &tab[2*9+0+0], &tab[2*9+1+0], &tab[2*9+2+0]};
 	char* cellule_01[9] = {&tab[0*9+0+3], &tab[0*9+1+3], &tab[0*9+2+3], &tab[1*9+0+3], &tab[1*9+1+3], &tab[1*9+2+3], &tab[2*9+0+3], &tab[2*9+1+3], &tab[2*9+2+3]};
@@ -53,8 +72,68 @@ int main(int argc, char const *argv[])
 	char* cellule_20[9] = {&tab[(3*2+0)*9+0+0], &tab[(3*2+0)*9+1+0], &tab[(3*2+0)*9+2+0], &tab[(3*2+1)*9+0+0], &tab[(3*2+1)*9+1+0], &tab[(3*2+1)*9+2+0], &tab[(3*2+2)*9+0+0], &tab[(3*2+2)*9+1+0], &tab[(3*2+2)*9+2+0]};
 	char* cellule_21[9] = {&tab[(3*2+0)*9+0+3], &tab[(3*2+0)*9+1+3], &tab[(3*2+0)*9+2+3], &tab[(3*2+1)*9+0+3], &tab[(3*2+1)*9+1+3], &tab[(3*2+1)*9+2+3], &tab[(3*2+2)*9+0+3], &tab[(3*2+2)*9+1+3], &tab[(3*2+2)*9+2+3]};
 	char* cellule_22[9] = {&tab[(3*2+0)*9+0+6], &tab[(3*2+0)*9+1+6], &tab[(3*2+0)*9+2+6], &tab[(3*2+1)*9+0+6], &tab[(3*2+1)*9+1+6], &tab[(3*2+1)*9+2+6], &tab[(3*2+2)*9+0+6], &tab[(3*2+2)*9+1+6], &tab[(3*2+2)*9+2+6]};
+	char** cellules[9] = {cellule_00, cellule_01, cellule_02, cellule_10, cellule_11, cellule_12, cellule_20, cellule_21, cellule_22};
 
+	while(end != 405){
 
+		for (int i = 0; i < 81; ++i){								// for all squares
+			char possibilites[9] = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+			char num_possibilites = 9;
+			if (!tab[i]){
+				printf("%d\n", i);
+				for (int j = 0; j < 9; ++j)							// check column
+				{
+					if (*(colonnes[i%9][j]) && possibilites[*(colonnes[i%9][j])])	// si la colone a un element non nul et qui soit nouveau
+					{
+						possibilites[*(colonnes[i%9][j])] = 0; //alors ce n'est plus une possibilite
+						num_possibilites--;
+						for (int iww= 0; iww < 9; ++iww)
+						{
+							printf("%d ", possibilites[iww]);
+						}
+						printf("\n");
+					}
+
+					if (*(lignes[i/9][j]) && possibilites[*(lignes[i/9][j])])	// si la ligne a un element non nul et qui soit nouveau
+					{
+						possibilites[*(lignes[i/9][j])] = 0; //alors ce n'est plus une possibilite
+						num_possibilites--;
+						//printf("%d\n", num_possibilites);
+					}
+
+					if (*(cellules[lc_to_cel(i/9,i%9)][j]) && possibilites[*(cellules[lc_to_cel(i/9,i%9)][j])])	// si la cellule a un element non nul et qui soit nouveau
+					{
+						possibilites[*(cellules[lc_to_cel(i/9,i%9)][j])] = 0; //alors ce n'est plus une possibilite
+						num_possibilites--;
+						//printf("%d\n", num_possibilites);
+					}
+				}
+
+				if (num_possibilites == 1) // si 1 seule possibilite
+				{
+					for (int k = 0; k < 9; ++k) //parcourt possibilites
+					{
+						if (possibilites[k]){
+							tab[i] = k;
+							end += k;
+						}
+					}
+				}
+			}
+		}
+
+		for (int i = 0; i < 81; ++i)
+		{
+			if (!(i%3) && (i%9))
+				printf(" ");
+			else if(!(i%9) && i)
+				printf("\n");
+			if (!(i%27) && i)
+				printf("\n");
+			printf("%d", tab[i]);
+		}
+		printf("\n");
+	}
 
 
 
