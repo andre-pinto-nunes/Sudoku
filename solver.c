@@ -58,12 +58,12 @@ int check (int tableau[81]){
 }
 
 int main(int argc, char const *argv[])
-{	
+{
 	int tab[81];
 	int end = 0;
 
 	FILE* file = fopen("sudoku.txt", "r");
-	
+
 	//creation tab
 	for (int i = 0; i < 81; ++i)
 	{
@@ -89,7 +89,7 @@ int main(int argc, char const *argv[])
 			printf("\n");
 		printf("%d", tab[i]);
 	}
-	printf("\n");
+	printf("\n\n-----------\n\n");
 
 /*
 	char* colonne_0[9] = {&tab[0+0], &tab[1*9+0], &tab[2*9+0], &tab[3*9+0], &tab[4*9+0], &tab[5*9+0], &tab[6*9+0], &tab[7*9+0], &tab[8*9+0]};
@@ -136,7 +136,7 @@ int main(int argc, char const *argv[])
 				printf("\n");
 			printf("%d", tab[i]);
 		}
-		printf("\n");
+		printf("\n\n-----------\n\n");
 
 		for (int cellule = 0; cellule < 9; ++cellule){
 			for (int valeur = 1; valeur < 10; ++valeur){
@@ -147,7 +147,7 @@ int main(int argc, char const *argv[])
 				int numpossibilites = 9;
 				for (int carre = 0; carre < 9; ++carre){
 					int val_case = tab[cellule/3*27 + carre/3*9 + 3*(cellule%3) + carre%3];
-					
+
 					if (val_case == valeur){
 						//printf("skip:%d\n", valeur);
 						break;
@@ -218,11 +218,11 @@ int main(int argc, char const *argv[])
 	while(end != 405){
 		for (int i = 0; i < 3; ++i){
 			for (int j = 0; j < 3; ++j){
-				
+
 				// on determine les inconnues d'une cellule
-				
+
 				char tab_inconnues[9] = {1,2,3,4,5,6,7,8,9};
-				
+
 				for (int ii = 0; ii < 3; ++ii){
 					for (int jj = 0; jj < 3; ++jj){
 						int connue = tab[9*(3*i+ii)+3*j+jj];
@@ -237,11 +237,11 @@ int main(int argc, char const *argv[])
 						for (int k = 0; k < 9; ++k){ //verif colonne
 							if (tab[])
 							{
-								
+
 							}
 						}
 					}
-				}				
+				}
 			}
 		}
 	}
