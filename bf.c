@@ -70,7 +70,7 @@ int main()
 	int end = 0;
     int size_of_key = 0;
 
-	FILE* file = fopen("ZZ", "r");
+	FILE* file = fopen("sudoku.txt", "r");
 
 	//creation tab
 	for (int i = 0; i < 81; ++i){
