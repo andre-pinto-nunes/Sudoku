@@ -28,7 +28,7 @@ nom_du_fichier:			.space 1
 # Conversion en tableau d'entiers				
 				la $t0, lecture		# pointeur lecture
 				la $t2, tableau		# tableau SUDOKU
-lire:				lb $t1, ($t0)		# valeur pointée
+lire:				lb $t1, ($t0)		# valeur pointÃ©e
 				blt $t1, '1', nan	#	- si cest plus petit que 1 cest pas un chiffre
 				bgt $t1, '9', nan	#	- si cest plus grand que 9 cest pas un chiffre
 				j eff
