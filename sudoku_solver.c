@@ -1,3 +1,5 @@
+# Execution ./sudoku_solver sudoku.txt
+
 #include <stdio.h>
 
 /*
