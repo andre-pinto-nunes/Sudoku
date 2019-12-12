@@ -92,14 +92,14 @@ int check (int tableau[81]){
 	4º - si on arrive a la limite (=9) et il y a toujours un probleme (on a teste toutes les possibilités), on revient a la case 'vide' precedente et on incremente la valeur
 	5º - on revient a 3º
 */
-int main(){
+int main(int argc, char const *argv[]){
 
 	int tab[81];		// tableau lu dans le fichier
 	int tab_merge[81];	// tableau issu de la fusion de cle avec tab
 	int end = 0;		// somme des elements du tableau - doit etre egal a 405 a la fin
 	int size_of_key = 0;	// taille de la cle - correspond au nombre de cases vides du tableau
 
-	FILE* file = fopen("sudoku.txt", "r");
+	FILE* file = fopen(argv[1], "r");
 
 	// creation tab a partir du fichier
 	// les 'X' deviennent des 0
