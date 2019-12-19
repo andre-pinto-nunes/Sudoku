@@ -60,36 +60,49 @@ t:
 				
 				sw $t4, size_of_key
 				sw $t5, end
+						
 # FIN LECTURE				
 #####################################################################################################
 				la $t0, cle
 				lw $t2, end
 
+
 loop:				
 				lb $t1, ($t0)			# KEY[i]
 				addi $t1, $t1, 1		# KEY[i]++
+				sb $t1, ($t0)
 				ble $t1, 9, finloop
-				sub $t2, $t2, $t1 		# end -= KEY[i]
-				addi $t2, $t2, 1		# end ++
+				#sub $t2, $t2, $t1 		# end -= KEY[i]
+				#addi $t2, $t2, 1		# end ++
+				subi $t2, $t2, 9
 				ori $t1, $0, 0			# KEY[i]=0
 				sb $t1, ($t0)
 				subi $t0, $t0, 1		# i--
 				j loop
 finloop:				
 				addi $t2, $t2, 1		# end ++				
-
+				
+				ori $fp, $sp, 0
+				subi $sp, $sp, 12
+				sw $t0, ($sp)
+				sw $t1, 4($sp)
+				sw $t2, 8($sp)
 				jal FONCTION_MERGE
 				jal FONCTION_CHECK
+				lw $t0, ($sp)
+				lw $t1, 4($sp)
+				lw $t2, 8($sp)
+				ori $sp, $fp, 0
+				
 				beqz $t3, loop
 				addi $t0, $t0, 1
-				bne $t2, 405, loop																																																																																																																																																																																																																																																																																																																																		
-																																																																																																																																																																																																																																																																																																																																								
+				bne $t2, 405, loop																																																																																																																																																																																																																																																																																																																												
 					
 # Affichage
 				ori $v0, $0, 1
 				ori $t3, $0, 3
 				ori $t2, $0, 0
-				la $t0, tableau
+				la $t0, tab_merge
 affiche:			lb $a0, ($t0)
 				div $t2, $t3
 				mfhi $t4
@@ -158,23 +171,67 @@ load:				lb $t4, ($t1)		# tableau[i]
 store_from_key:			sb $t5, ($t3)		# si tableau[i] == 0 , alors, merge[i] = cle[i]
 				addi $t2, $t2, 1
 				
-continue:			ori $v0, $0, 1		#------------------
-				lb $a0, ($t3)		# print pour tester
-				syscall 		#------------------
+continue:
 				addi $t1, $t1, 1
 				addi $t3, $t3, 1
 				addi $t6, $t6, 1
 				blt $t6, 81, load
 				
-				jalr $ra
+#				jr  $ra
 
+				# Affichage
+#				ori $v0, $0, 1
+#				ori $t3, $0, 3
+#				ori $t2, $0, 0
+#				la $t0, tab_merge
+#affiche1:			lb $a0, ($t0)
+#				div $t2, $t3
+#				mfhi $t4
+#				beqz $t4, espace1
+#call1:				syscall
+#				addi $t0, $t0, 1
+#				addi $t2, $t2, 1
+#				blt $t2, 81, affiche1
+#				jr $ra
+#				j FONCTION_CHECK
+#
+#espace1:				ori $t3, $0, 9
+#				div $t2, $t3
+#				ori $t3, $0, 3
+#				mfhi $t4
+#				beqz $t4, newline1
+#				ori $v0, $0, 11
+#				ori $a0, $0, 32		
+#				syscall
+#				lb $a0, ($t0)
+#				ori $v0, $0, 1
+#				j call1
+
+
+
+#newline1:
+#				ori $t3, $0, 27
+#				div $t2, $t3
+#				ori $t3, $0, 3
+#				mfhi $t4
+#				ori $v0, $0, 11		# affiche char
+#				ori $a0, $0, 10		# affiche newline 
+#				syscall
+#				beqz $t4, newline21
+#				j rien1
 				
+#newline21:			syscall
+#				
+#rien1:				
+#				lb $a0, ($t0)		# remet le caractere lu pour l'affichage
+#				ori $v0, $0, 1		# affiche int
+#				j call1
 
-			
+
 # CHECK
 ########
 FONCTION_CHECK:
-				
+
 #######################################################################################################
 					#check lignes
 					ori $t1, $0, 0							# i: indice de la case (ligne*9 + colonne)
@@ -185,7 +242,7 @@ for_lignes:
 					ori $t2, $0, 0							#- j: indice de la case de la ligne (colonne)
 
 forfor_lignes:
-					lb $t4, tableau($t1)
+					lb $t4, tab_merge($t1)
 					ori $t3, $0, 0							#-- k: indice de small_tab
 				
 forforfor_lignes:											#--- on parcourt small_tab
@@ -216,7 +273,7 @@ for_colonnes:
 					ori $t2, $0, 0							#- j: indice de la case de la ligne (colonne)
 
 forfor_colonnes:
-					lb $t4, tableau($t1)
+					lb $t4, tab_merge($t1)
 					ori $t3, $0, 0							#-- k: indice de small_tab
 				
 forforfor_colonnes:											#--- on parcourt small_tab
@@ -254,7 +311,7 @@ for1:
 					ori $t5, $0, 0
 					ori $t9, $0, 0
 for4:
-					lb $t7, tableau($t1)
+					lb $t7, tab_merge($t1)
 					ori $t6, $0, 0							#-- k: indice de small_tab				
 smalltab_cellules:											#--- on parcourt small_tab
 					lb $t8, small_tab($t6)
@@ -286,7 +343,7 @@ no_problemo_cellules:
 					blt $t2, 3, for1
 
 return_1:				ori $t3, $0, 1
-					jalr $ra
+					jr $ra
 
 return_0:				ori $t3, $0, 0
-					jalr $ra
+					jr $ra

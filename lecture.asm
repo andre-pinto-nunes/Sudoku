@@ -4,7 +4,7 @@
 				.align 2
 lecture:			.space 118
 				.align 2
-tableau:			.byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+tableau:			.byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 nom_du_fichier:			.space 1
 				.text
 
@@ -28,7 +28,7 @@ nom_du_fichier:			.space 1
 # Conversion en tableau d'entiers				
 				la $t0, lecture		# pointeur lecture
 				la $t2, tableau		# tableau SUDOKU
-lire:				lb $t1, ($t0)		# valeur pointée
+lire:				lb $t1, ($t0)		# valeur pointee
 				blt $t1, '1', nan	#	- si cest plus petit que 1 cest pas un chiffre
 				bgt $t1, '9', nan	#	- si cest plus grand que 9 cest pas un chiffre
 				j eff
@@ -92,17 +92,6 @@ rien:
 				ori $v0, $0, 1		# affiche int
 				j call
 
-
-
-#				ori $v0, $0, 1
-				
-#				ori $t2, $0, 0
-#				la $t0, tableau
-#affiche:			lb $a0, ($t0)
-#				syscall
-#				addi $t0, $t0, 1
-#				addi $t2, $t2, 1
-#				blt $t2, 81, affiche
 
 
 
