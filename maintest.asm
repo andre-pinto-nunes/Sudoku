@@ -1,231 +1,242 @@
 # java -jar .\Mars4_5.jar .\LECTURE.asm pa sudoku.txt
 # pour executer il faut passer le nom du texte en argument
-				.data
-				.align 2
-lecture:			.space 118
-				.align 2
-tableau:			.byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-nom_du_fichier:			.space 1
-				.align 2
-small_tab:			.byte 0, 0, 0, 0, 0, 0, 0, 0, 0
-cle:				.byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-tab_merge:			.byte 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-end:				.word 0
-size_of_key:			.word 0
+					.data
+					.align 	2
+lecture:				.space 	118
+					.align 	2
+tableau:				.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+nom_du_fichier:				.space 	1
+#					.align 	2
+end:					.word 	0 #ne sert a rien
+small_tab:				.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0
+cle:					.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+tab_merge:				.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+size_of_key:				.word 	0 
+arg1:					.word 	0
+arg2:					.word 	0
 
-				.text
+					.text
 				
 # LECTURE
 #####################################################################################################
 
 # Ouverture fichier
-				ori $v0, $0, 13		# syscall : ouvrir fichier
-				lw $a0, ($a1)		# $a0 : nom du fichier = argc[0]
-				ori $a1, $0, 0		# $a1 : 0 = read ; 1 = write
-				ori $a2, $0, 0		# $a2 : mode - je sais pas a quoi ca sert
-				syscall			# ouvrir fichier
-				move $t0, $v0		# on garde FILE* pour la lecture
+					ori 	$v0, $0, 13		# syscall : ouvrir fichier
+					lw 	$a0, ($a1)		# $a0 : nom du fichier = argc[0]
+					ori 	$a1, $0, 0		# $a1 : 0 = read ; 1 = write
+					ori 	$a2, $0, 0		# $a2 : mode - je sais pas a quoi ca sert
+					syscall				# ouvrir fichier
+					move 	$t0, $v0		# on garde FILE* pour la lecture
 
 
 # Lecture fichier
-				ori $v0, $0, 14		# syscall : ouvrir fichier
-				move $a0, $t0		# pointeur du fichier FILE*
-				la $a1, lecture		# destination des caracteres lus
-				ori $a2, $1, 119	# nb de caracteres a lire  #'\n' = 2 char
-				syscall			# lire fichier
+					ori 	$v0, $0, 14		# syscall : ouvrir fichier
+					move	$a0, $t0		# pointeur du fichier FILE*
+					la 	$a1, lecture		# destination des caracteres lus
+					ori 	$a2, $1, 119		# nb de caracteres a lire  #'\n' = 2 char
+					syscall				# lire fichier
 				
 # Conversion en tableau d'entiers				
-				la $t0, lecture		# pointeur lecture
-				la $t2, tableau		# tableau SUDOKU
-				lw $t4, end		# somme des chiffres du tableau
-				lw $t5, size_of_key	# taille de la cle, nombre de cases vides du tableau
-lire:				lb $t1, ($t0)		# valeur pointee
-				blt $t1, '1', nan	#	- si cest plus petit que 1 cest pas un chiffre
-				bgt $t1, '9', nan	#	- si cest plus grand que 9 cest pas un chiffre
-				j eff
-nan:							# si c'est pas un chiffre cest : soit X, soit ' ', soit '\n'
-				bne $t1, 'X', t		# si cest pas un X on passe au suivant, sans rien faire
-				ori $t1, $0, '0'	# si cest un X, on envoie un 0
-				addi $t4, $t4, 1        # on augmente le compteur de cases vides (size_ofkey)
+					la 	$t0, lecture		# pointeur lecture
+					la 	$t2, tableau		# tableau SUDOKU
+					lw 	$t4, end		# somme des chiffres du tableau
+					lw 	$t5, size_of_key	# taille de la cle, nombre de cases vides du tableau
+lire:					lb 	$t1, ($t0)		# valeur pointee
+					blt 	$t1, '1', nan		#	- si cest plus petit que 1 cest pas un chiffre
+					bgt 	$t1, '9', nan		#	- si cest plus grand que 9 cest pas un chiffre
+					j 	eff
+nan:									# si c'est pas un chiffre cest : soit X, soit ' ', soit '\n'
+					bne 	$t1, 'X', t		# si cest pas un X on passe au suivant, sans rien faire
+					ori 	$t1, $0, '0'		# si cest un X, on envoie un 0
+					addi 	$t4, $t4, 1       	# on augmente le compteur de cases vides (size_ofkey)
 				
 eff:				
-				subi $t1, $t1, '0'	# on enleve '0' pour convertir le ASCII en int
-				add $t5, $t5, $t1	# on augmente la variable end (somme des chiffres du tableau)
-				sb $t1, 0($t2)		# on met l'entier ds la destination
-				addi $t2, $t2, 1	# &destination[i] ++
-				addi $t3, $t3, 1	# i++ : compteur tours de boucle
+					subi 	$t1, $t1, '0'		# on enleve '0' pour convertir le ASCII en int
+					add 	$t5, $t5, $t1		# on augmente la variable end (somme des chiffres du tableau)
+					sb 	$t1, 0($t2)		# on met l'entier ds la destination
+					addi 	$t2, $t2, 1		# &destination[i] ++
+					addi 	$t3, $t3, 1		# i++ : compteur tours de boucle
 t:				
-				addi $t0, $t0, 1	# &source[i] ++
-				blt $t3, 81, lire
-				
-				sw $t4, size_of_key
-				sw $t5, end
+					addi 	$t0, $t0, 1		# &source[i] ++
+					blt 	$t3, 81, lire
+					
+					sw 	$t4, size_of_key
+					sw 	$t5, end
 						
 # FIN LECTURE				
 #####################################################################################################
-				la $t0, cle
-				lw $t2, end
+					la 	$t0, cle
+					lw 	$t2, end
 
 
 loop:				
-				lb $t1, ($t0)			# KEY[i]
-				addi $t1, $t1, 1		# KEY[i]++
-				sb $t1, ($t0)
-				ble $t1, 9, finloop
-				#sub $t2, $t2, $t1 		# end -= KEY[i]
-				#addi $t2, $t2, 1		# end ++
-				subi $t2, $t2, 9
-				ori $t1, $0, 0			# KEY[i]=0
-				sb $t1, ($t0)
-				subi $t0, $t0, 1		# i--
-				j loop
+					lb 	$t1, ($t0)			# KEY[i]
+					addi 	$t1, $t1, 1			# KEY[i]++
+					sb 	$t1, ($t0)
+					ble 	$t1, 9, finloop
+					#sub 	$t2, $t2, $t1 			# end -= KEY[i]
+					#addi 	$t2, $t2, 1			# end ++
+					subi 	$t2, $t2, 9
+					ori 	$t1, $0, 0			# KEY[i]=0
+					sb 	$t1, ($t0)
+					subi 	$t0, $t0, 1			# i--
+					j 	loop
 finloop:				
-				addi $t2, $t2, 1		# end ++				
+					addi 	$t2, $t2, 1			# end ++				
 				
-				ori $fp, $sp, 0
-				subi $sp, $sp, 12
-				sw $t0, ($sp)
-				sw $t1, 4($sp)
-				sw $t2, 8($sp)
-				jal FONCTION_MERGE
-				jal FONCTION_CHECK
-				lw $t0, ($sp)
-				lw $t1, 4($sp)
-				lw $t2, 8($sp)
-				ori $sp, $fp, 0
+
+					sw 	$t0, arg1
+					sw 	$t1, arg2
+					sw 	$t2, end
+					jal 	FONCTION_MERGE
+					jal 	FONCTION_CHECK
+					lw 	$t0, arg1
+					lw 	$t1, arg2
+					lw 	$t2, end
 				
-				beqz $t3, loop
-				addi $t0, $t0, 1
-				bne $t2, 405, loop																																																																																																																																																																																																																																																																																																																												
+					beqz 	$t3, loop
+					addi 	$t0, $t0, 1
+					#ori	$v0, $0, 1
+					#ori	$a0, $t2, 0
+					#syscall
+					#ori	$v0, $0, 11
+					#ori	$a0, $0, 10
+					#syscall
+					#lw 	$t8, size_of_key
+					#subi 	$t8, $t8, 1
+					lb 	$t9, cle + 56
+
+					beqz 	$t9, loop
+					#bne 	$t2, 405, loop																																																																																																																																																																																																																																																																																																																												
 					
 # Affichage
-				ori $v0, $0, 1
-				ori $t3, $0, 3
-				ori $t2, $0, 0
-				la $t0, tab_merge
-affiche:			lb $a0, ($t0)
-				div $t2, $t3
-				mfhi $t4
-				beqz $t4, espace
-call:				syscall
-				addi $t0, $t0, 1
-				addi $t2, $t2, 1
-				blt $t2, 81, affiche
-				j fin
+					ori 	$v0, $0, 1
+					ori 	$t3, $0, 3
+					ori 	$t2, $0, 0
+					la 	$t0, tab_merge
+affiche:				lb 	$a0, ($t0)
+					div 	$t2, $t3
+					mfhi 	$t4
+					beqz 	$t4, espace
+call:					syscall
+					addi 	$t0, $t0, 1
+					addi 	$t2, $t2, 1
+					blt 	$t2, 81, affiche
+					j 	fin
 
-espace:				ori $t3, $0, 9
-				div $t2, $t3
-				ori $t3, $0, 3
-				mfhi $t4
-				beqz $t4, newline
-				ori $v0, $0, 11
-				ori $a0, $0, 32		
-				syscall
-				lb $a0, ($t0)
-				ori $v0, $0, 1
-				j call
+espace:					ori 	$t3, $0, 9
+					div 	$t2, $t3
+					ori 	$t3, $0, 3
+					mfhi 	$t4
+					beqz 	$t4, newline
+					ori 	$v0, $0, 11
+					ori 	$a0, $0, 32		
+					syscall
+					lb 	$a0, ($t0)
+					ori 	$v0, $0, 1
+					j 	call
 
 
 
 newline:
-				ori $t3, $0, 27
-				div $t2, $t3
-				ori $t3, $0, 3
-				mfhi $t4
-				ori $v0, $0, 11		# affiche char
-				ori $a0, $0, 10		# affiche newline 
-				syscall
-				beqz $t4, newline2
-				j rien
-				
-newline2:			syscall
+					ori 	$t3, $0, 27
+					div 	$t2, $t3
+					ori 	$t3, $0, 3
+					mfhi 	$t4
+					ori 	$v0, $0, 11		# affiche char
+					ori 	$a0, $0, 10		# affiche newline 
+					syscall
+					beqz 	$t4, newline2
+					j 	rien
+
+newline2:				syscall
 				
 rien:				
-				lb $a0, ($t0)		# remet le caractere lu pour l'affichage
-				ori $v0, $0, 1		# affiche int
-				j call
+					lb 	$a0, ($t0)		# remet le caractere lu pour l'affichage
+					ori 	$v0, $0, 1		# affiche int
+					j 	call
 																																																																																																																																																																																																																																																																																																																																											
 fin:																																																																																																																																																																																																																																																																																																																																																
-				#end
-				ori $v0, $0, 10
-				syscall
+					#end
+					ori 	$v0, $0, 10
+					syscall
 				
 ############################### FONCTIONS ###############################
 
 # MERGE
 ########
 FONCTION_MERGE:
-				la $t1, tableau		# &tableau[i]++
-				la $t2, cle		# &cle[i]++
-				la $t3, tab_merge	# &tab_merge[i]++
-				ori $t6, $0, 0 
+					la 	$t1, tableau		# &tableau[i]++
+					la 	$t2, cle		# &cle[i]++
+					la 	$t3, tab_merge		# &tab_merge[i]++
+					ori 	$t6, $0, 0 
 				
-load:				lb $t4, ($t1)		# tableau[i]
-				lb $t5, ($t2)		# cle[i]
+load:					lb 	$t4, ($t1)		# tableau[i]
+					lb 	$t5, ($t2)		# cle[i]
 				
-				beqz $t4, store_from_key	
+					beqz 	$t4, store_from_key	
+					
+					sb 	$t4, ($t3)		# si tableau[i] != 0 , alors, merge[i] = tab[i]
+					j 	continue
 				
-				sb $t4, ($t3)		# si tableau[i] != 0 , alors, merge[i] = tab[i]
-				j continue
-				
-store_from_key:			sb $t5, ($t3)		# si tableau[i] == 0 , alors, merge[i] = cle[i]
-				addi $t2, $t2, 1
+store_from_key:				sb 	$t5, ($t3)		# si tableau[i] == 0 , alors, merge[i] = cle[i]
+					addi 	$t2, $t2, 1
 				
 continue:
-				addi $t1, $t1, 1
-				addi $t3, $t3, 1
-				addi $t6, $t6, 1
-				blt $t6, 81, load
+					addi 	$t1, $t1, 1
+					addi 	$t3, $t3, 1
+					addi 	$t6, $t6, 1
+					blt 	$t6, 81, load
 				
-#				jr  $ra
+					jr  	$ra
 
-				# Affichage
-#				ori $v0, $0, 1
-#				ori $t3, $0, 3
-#				ori $t2, $0, 0
-#				la $t0, tab_merge
-#affiche1:			lb $a0, ($t0)
-#				div $t2, $t3
-#				mfhi $t4
-#				beqz $t4, espace1
-#call1:				syscall
-#				addi $t0, $t0, 1
-#				addi $t2, $t2, 1
-#				blt $t2, 81, affiche1
-#				jr $ra
-#				j FONCTION_CHECK
-#
-#espace1:				ori $t3, $0, 9
-#				div $t2, $t3
-#				ori $t3, $0, 3
-#				mfhi $t4
-#				beqz $t4, newline1
-#				ori $v0, $0, 11
-#				ori $a0, $0, 32		
-#				syscall
-#				lb $a0, ($t0)
-#				ori $v0, $0, 1
-#				j call1
+					# Affichage
+					ori 	$v0, $0, 1
+					ori 	$t3, $0, 3
+					ori 	$t2, $0, 0
+					la 	$t0, tab_merge
+affiche1:				lb 	$a0, ($t0)
+					div 	$t2, $t3
+					mfhi 	$t4
+					beqz 	$t4, espace1
+call1:					syscall
+					addi 	$t0, $t0, 1
+					addi 	$t2, $t2, 1
+					blt 	$t2, 81, affiche1
+					jr 	$ra
+					#j 	FONCTION_CHECK
+
+espace1:				ori 	$t3, $0, 9
+					div 	$t2, $t3
+					ori 	$t3, $0, 3
+					mfhi 	$t4
+					beqz 	$t4, newline1
+					ori 	$v0, $0, 11
+					ori 	$a0, $0, 32		
+					syscall
+					lb 	$a0, ($t0)
+					ori 	$v0, $0, 1
+					j 	call1
 
 
 
-#newline1:
-#				ori $t3, $0, 27
-#				div $t2, $t3
-#				ori $t3, $0, 3
-#				mfhi $t4
-#				ori $v0, $0, 11		# affiche char
-#				ori $a0, $0, 10		# affiche newline 
-#				syscall
-#				beqz $t4, newline21
-#				j rien1
+newline1:
+					ori 	$t3, $0, 27
+					div 	$t2, $t3
+					ori 	$t3, $0, 3
+					mfhi 	$t4
+					ori 	$v0, $0, 11		# affiche char
+					ori 	$a0, $0, 10		# affiche newline 
+					syscall
+					beqz 	$t4, newline21
+					j 	rien1
 				
-#newline21:			syscall
-#				
-#rien1:				
-#				lb $a0, ($t0)		# remet le caractere lu pour l'affichage
-#				ori $v0, $0, 1		# affiche int
-#				j call1
+newline21:				syscall
+				
+rien1:				
+					lb 	$a0, ($t0)		# remet le caractere lu pour l'affichage
+					ori 	$v0, $0, 1		# affiche int
+					j 	call1
 
 
 # CHECK
