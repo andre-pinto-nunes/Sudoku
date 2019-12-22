@@ -1,29 +1,29 @@
 #include <stdio.h>
 
 /*
-	Remplace toutes les cases vides du tableau sudoku (tab) par les elements d'une cle (key).
-	Renvoie un tableau (merged) qui correspond a la fusion du tableau initial avec la cle.
+	Remplace toutes les cases vides du tableau sudoku (tab) par les elements d'une cle (cle).
+	Renvoie un tableau (t_fusion) qui correspond a la fusion du tableau initial avec la cle.
 */
-int* merge(int* tab, int* key, int* merged){
+int* fusion(int* tab, int* cle, int* t_fusion){
     int k = 0;
     for (int i = 0; i < 81; i++){	// on parcourt le tableau a resoudre
         if (!tab[i]){			// si on trouve un 0 (= case vide) ...
-            merged[i] = key[k];		// 	... on recopie un element de la cle
+            t_fusion[i] = cle[k];		// 	... on recopie un element de la cle
             k++;
         }else{				// sinon ...
-        	merged[i] = tab[i];	// 	... on recopie un element du tableau
+        	t_fusion[i] = tab[i];	// 	... on recopie un element du tableau
         }
     }
-    return merged;
+    return t_fusion;
 }
 
 /*
 	Verifie si un tableau n'a pas d'erreurs (les cases vides ne sont pas prises en compte)
 	Renvoi 1 si c'est le cas, 0 sinon
 */
-int check (int tableau[81]){
+int verifier (int tableau[81]){
 	
-	//check lignes
+	//verifier lignes
 	// on parcourt les lignes
 	for (int ligne = 0; ligne < 9; ++ligne){					
 		
@@ -49,7 +49,7 @@ int check (int tableau[81]){
 		}
 	}
 
-	//check colonnes
+	//verifier colonnes
 	// apres c la mm chose du coup je vais tout reecrire 
 	for (int colonne = 0; colonne < 9; ++colonne){
 		int tab[9] = {};
@@ -63,7 +63,7 @@ int check (int tableau[81]){
 		}
 	}
 
-	//check cellules
+	//verifier cellules
 	// ici, on dirait pas mais c aussi la meme chose sauf qu'il y a plus de for
 	for (int ligne = 0; ligne < 3; ++ligne){
 		for (int colonne = 0; colonne < 3; ++colonne){
@@ -95,9 +95,9 @@ int check (int tableau[81]){
 int main(int argc, char const *argv[]){
 
 	int tab[81];		// tableau lu dans le fichier
-	int tab_merge[81];	// tableau issu de la fusion de cle avec tab
-	int end = 0;		// somme des elements du tableau - doit etre egal a 405 a la fin
-	int size_of_key = 0;	// taille de la cle - correspond au nombre de cases vides du tableau
+	int tab_fusion[81];	// tableau issu de la fusion de cle avec tab
+	int somme = 0;		// somme des elements du tableau - doit etre egal a 405 a la fin
+	int taille_cle = 0;	// taille de la cle - correspond au nombre de cases vides du tableau
 
 	FILE* file = fopen(argv[1], "r");
 
@@ -110,40 +110,40 @@ int main(int argc, char const *argv[]){
 			i--;
 		else if (c == 'X'){
 			tab[i] = 0;
-			tab_merge[i] = 0;
+			tab_fusion[i] = 0;
 			// a chaque fois que l'on trouve un 0, on augmente la taille de la cle
-			size_of_key++;
+			taille_cle++;
 		}else{
-			tab_merge[i] = 0;
+			tab_fusion[i] = 0;
 			tab[i] = c - '0';
-			end += c - '0';
+			somme += c - '0';
 		}
 	}
 
 	// creation du tableau cle
-	int key[size_of_key];
-	for (int i = 0; i < size_of_key; ++i){
-		key[i]=0;
+	int cle[taille_cle];
+	for (int i = 0; i < taille_cle; ++i){
+		cle[i]=0;
 	}
 	
 	//indice de la cle
 	int i = 0;
-	while (!(end == 405 && check(merge(tab, key, tab_merge)))){
+	while (!(somme == 405 && verifier(fusion(tab, cle, tab_fusion)))){
 		
-		// on incremente key[i], si on depasse 9...
-		while (++key[i] > 9){
-			// on remet key[i] a 0 et on met a jour la valeur de end
-			end -= key[i]-1;
-			key[i] = 0;
+		// on incremente cle[i], si on depasse 9...
+		while (++cle[i] > 9){
+			// on remet cle[i] a 0 et on met a jour la valeur de somme
+			somme -= cle[i]-1;
+			cle[i] = 0;
 			// on revient a l'indice precedent
 			i--;
 		}
 		
-		// on met a jour la valeur de end (a cause du key ++ dans le while)
-		end ++;
+		// on met a jour la valeur de somme (a cause du 'cle ++' dans le while)
+		somme ++;
 		
 		// si il n'y a pas de probleme dans le tableau
-		if (check(merge(tab, key, tab_merge))){
+		if (verifier(fusion(tab, cle, tab_fusion))){
 			
 			// on passe a l'indice suivant
 			i++;
@@ -159,7 +159,7 @@ int main(int argc, char const *argv[]){
 			printf("\n");
 		if (!(i%27) && i)
 			printf("\n");
-		printf("%d.", merge(tab, key, tab_merge)[i]);
+		printf("%d.", fusion(tab, cle, tab_fusion)[i]);
 	}
 
 	printf("\n");
