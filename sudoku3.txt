@@ -1,11 +1,11 @@
-X 2 3   X X X   1 4 X
-X 8 X   5 X X   X X 7 
-X X 1   X 6 X   X X X 
+X23 XXX 14X
+X8X 5XX XX7
+XX1 X6X XXX
 
-7 X X   X X X   3 X X
-X X X   X 2 X   X X X
-X X 4   X X 1   9 X 8
+7XX XXX 3XX
+XXX X2X XXX
+XX4 XX1 9X8
 
-X 6 X   X 3 8   X X X
-X X X   X X X   X X X
-1 X X   2 X 6   5 3 9
+X6X X38 XXX
+XXX XXX XXX
+1XX 2X6 539
