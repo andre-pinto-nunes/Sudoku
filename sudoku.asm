@@ -14,7 +14,7 @@ nom_du_fichier:				.space 	1
 					.align 	2
 					
 # liste des chiffres déjà trouvés dans une ligne/colonne/cellule - (fonction vérification)
-small_tab:				.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0
+petit_tableau:				.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0
 
 # clé calculée dans le main qui résout le sudoku
 cle:					.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
@@ -45,22 +45,22 @@ tab_fusion:				.byte 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 					syscall					# lire fichier
 				
 # Conversion en tableau d'entiers				
-					la 	$t0, lecture			# pointeur lecture
-					la 	$t2, tableau			# tableau SUDOKU
-lire:					lb 	$t1, ($t0)			# valeur pointee
-					blt 	$t1, '1', nan			#	- si cest plus petit que 1 cest pas un chiffre
-					bgt 	$t1, '9', nan			#	- si cest plus grand que 9 cest pas un chiffre
+					la 	$t0, lecture			# $t0 : pointeur lecture
+					la 	$t2, tableau			# $t2 : tableau SUDOKU
+lire:					lb 	$t1, ($t0)			# $t1 : valeur pointee
+					blt 	$t1, '1', nan			#	- si c'est plus petit que 1 ce n'est pas un chiffre
+					bgt 	$t1, '9', nan			#	- si c'est plus grand que 9 ce n'est pas un chiffre
 					j 	eff
-nan:										# si c'est pas un chiffre c'est : soit X, soit ' ', soit '\n'
-					bne 	$t1, 'X', t			# si cest pas un X on passe au suivant, sans rien faire
-					ori 	$t1, $0, '0'			# si cest un X, on envoie un 0
-					addi	$t4, $t4, 1             	# on compte le nombre de '0' dans $t4, cela correspond à la taille de la clé
+nan:										# si ce n'est pas un chiffre c'est : soit X, soit ' ', soit '\n'
+					bne 	$t1, 'X', t			# si ce n'est pas un X on passe au suivant, sans rien faire
+					ori 	$t1, $0, '0'			# si c'est un X, on envoie un 0
+					addi	$t4, $t4, 1             	# $t4 : compteur du nombre de '0', cela correspond à la taille de la clé
 				
 eff:				
-					subi 	$t1, $t1, '0'			# on enleve '0' pour convertir le ASCII en int
-					sb 	$t1, 0($t2)			# on met l'entier ds la destination
+					subi 	$t1, $t1, '0'			# on retranche '0' pour convertir le code ASCII en int
+					sb 	$t1, 0($t2)			# on met l'entier dans la destination
 					addi 	$t2, $t2, 1			# &destination[i] ++
-					addi 	$t3, $t3, 1			# i++ : compteur tours de boucle
+					addi 	$t3, $t3, 1			# $t3 : compteur tours de boucle
 t:				
 					addi 	$t0, $t0, 1			# &source[i] ++
 					blt 	$t3, 81, lire
@@ -78,19 +78,19 @@ t:
 # Main #
 					sb	$t4, taille_de_la_cle
 					la 	$t0, cle
-loop:				
-					lb 	$t1, ($t0)			# KEY[i]
-					addi 	$t1, $t1, 1			# KEY[i]++
+boucle:				
+					lb 	$t1, ($t0)			# cle[i] (initialement a 0)
+					addi 	$t1, $t1, 1			# cle[i]++
 					sb 	$t1, ($t0)
 					ble 	$t1, 9, pas_de_depassement	
 					subi 	$t2, $t2, 9			# end -= 9
-					ori 	$t1, $0, 0			# KEY[i]=0
+					ori 	$t1, $0, 0			# cle[i]=0
 					sb 	$t1, ($t0)
 					subi 	$t0, $t0, 1			# i--
-					j 	loop
+					j 	boucle
 pas_de_depassement:				
-					ori	$fp, $sp, 0			# fp prend la valeur de sp
-					addi	$sp, $sp, 12			# on avance sp de 12 bytes pour pouvoir stocker 3 mots
+					ori	$fp, $sp, 0			# $fp prend la valeur de $sp
+					addi	$sp, $sp, 12			# on avance $sp de 12 octets pour pouvoir stocker 3 mots
 					
 					sw 	$t0, 0($fp)			#
 					sw 	$t1, 4($fp)			# on stocke les registres entre fp et sp
@@ -103,19 +103,19 @@ pas_de_depassement:
 					lw 	$t1, 4($fp)			# on recupere les registres stockes
 					lw 	$t2, 8($fp)			#
 					
-					ori	$sp, $fp, 0			# on remet le stack pointer a sa place originale
+					ori	$sp, $fp, 0			# on remet le stack pointer a sa place initiale
 
 				
-					beqz 	$t3, loop
+					beqz 	$t3, boucle
 					addi 	$t0, $t0, 1
 					
 					lb 	$t3, taille_de_la_cle
-					lb	$t4, cle($t3)			# on charge le bit qui se situe juste après la fin de la clé
-					beqz 	$t4, loop			# si la valeur de ce bit est différente de 0, c'est que la clé est finie
+					lb	$t4, cle($t3)			# on charge l'octet qui se situe juste après la fin de la clé
+					beqz 	$t4, boucle			# si cette valeur est différente de 0, c'est que la clé est finie
 
 					
 # Affichage #				##################
-					ori 	$v0, $0, 1			# print entier
+					ori 	$v0, $0, 1			# afficher entier
 					ori 	$t3, $0, 3			# $t3 = 3 (on utilise cette constante pour séparer les cellules par des espaces/paragraphes)
 					ori 	$t2, $0, 0			# $t2 
 					la 	$t0, tab_fusion			# $t0 = &tab_fusion[i]
@@ -134,7 +134,7 @@ espace:					ori 	$t3, $0, 9
 					div 	$t2, $t3			# on divise l'indice par 9
 					ori 	$t3, $0, 3
 					mfhi 	$t4
-					beqz 	$t4, newline			# si l'indice est multiple de 9, on est en fin de ligne - on affiche un newline
+					beqz 	$t4, saut_de_ligne		# si l'indice est multiple de 9, on est en fin de ligne - on affiche un saut de ligne
 					ori 	$v0, $0, 11			# affiche char
 					ori 	$a0, $0, 32			# affiche espace
 					syscall
@@ -143,18 +143,18 @@ espace:					ori 	$t3, $0, 9
 					j 	call				# on revient à l'affichage du tableau
 
 # On sépare les lignes en 3 groupes de 3
-newline:
+saut_de_ligne:
 					ori 	$t3, $0, 27			# $t3 = 9*3 = 27 
 					div 	$t2, $t3			# on divise l'indice par 27
 					ori 	$t3, $0, 3
 					mfhi 	$t4				# on recupere le reste de la division
 					ori 	$v0, $0, 11			# affiche char
-					ori 	$a0, $0, 10			# affiche newline 
+					ori 	$a0, $0, 10			# affiche saut de ligne 
 					syscall
-					beqz 	$t4, newline2			# si l'indice est multiple de 27, on est en fin de la 3éme ligne - on affiche un deuxieme newline
+					beqz 	$t4, saut_de_ligne2		# si l'indice est multiple de 27, on est en fin de la 3éme ligne - on affiche un deuxieme saut de ligne
 					j 	rien
 
-newline2:				syscall
+saut_de_ligne2:				syscall
 				
 rien:				
 					lb 	$a0, ($t0)			# $a0 reprend la valeur de l'indice
@@ -168,70 +168,70 @@ fin:
 				
 ############################### FONCTIONS ###############################
 
-# FUSION
-########
+# FUSIONNER
+###########
 Fonction_Fusion:
 					la 	$t1, tableau			# $t1 = &tableau[i]
 					la 	$t2, cle			# $t2 = &cle[i]
 					la 	$t3, tab_fusion			# $t3 = &tab_fusion[i]
 					ori 	$t6, $0, 0			# $t6 = i  (compteur de tours de boucle)
 				
-load:					lb 	$t4, ($t1)			# $t4 = tableau[i]
+charger:				lb 	$t4, ($t1)			# $t4 = tableau[i]
 					lb 	$t5, ($t2)			# $t5 = cle[i]
 				
-					beqz 	$t4, store_from_key		# si tableau[i] == 0
+					beqz 	$t4, remplir_avec_cle		# si tableau[i] == 0
 					
 					sb 	$t4, ($t3)			# si tableau[i] n'est pas '0', alors on le recopie dans tab_fusion[i]
 					j 	continue
 				
-store_from_key:				sb 	$t5, ($t3)			# si on trouve un zero dans le tableau, on le remplace par un élément de la clé
+remplir_avec_cle:			sb 	$t5, ($t3)			# si on trouve un zero dans le tableau, on le remplace par un élément de la clé
 					addi 	$t2, $t2, 1			# &cle[i++], on passe a l'element suivant de la cle
 				
 continue:
 					addi 	$t1, $t1, 1			# &tableau[i++]
 					addi 	$t3, $t3, 1			# &tab_fusion[i++]
 					addi 	$t6, $t6, 1			# i ++
-					blt 	$t6, 81, load			# ceci se repete 81 fois
+					blt 	$t6, 81, charger		# ceci se repete 81 fois
 				
 					jr  	$ra				# on revient à $ra sans rien retourner
 
-# CHECK
-########
+# VERIFIER
+##########
 Fonction_Verification:
 
 #######################################################################################################
 					
-					#check lignes
+					#verifier lignes
 					
 					ori 	$t1, $0, 0						# $t1 = i: indice de la case (i = ligne*9 + colonne)
 for_lignes:			
-					sw 	$0, small_tab						#-
-					sw 	$0, small_tab+4						#-
-					sb 	$0, small_tab+8						#- small_tab[9]=[];
-					ori 	$t6, $0, 1						#- $t6 = taille de small_tab
+					sw 	$0, petit_tableau					#-
+					sw 	$0, petit_tableau+4					#-
+					sb 	$0, petit_tableau+8					#- petit_tableau[9]=[];
+					ori 	$t6, $0, 1						#- $t6 = taille de petit_tableau
 					ori 	$t2, $0, 1						#- j: indice de la case sur une ligne (i.e. numero de la colonne)
 					lb 	$t4, tab_fusion($t1)					#- $t4 = tab_fusion[i]
-					sb 	$t4, small_tab						#- (avant la boucle), on place un premier element dans small_tab
+					sb 	$t4, petit_tableau					#- (avant la boucle), on place un premier element dans petit_tableau
 					addi 	$t1, $t1, 1						#- on passe a l'element suivant
 
 forfor_lignes:
 					lb 	$t4, tab_fusion($t1)					#- $t4 = tab_fusion[i]
-					ori	$t3, $0, 0						#-- k: indice de small_tab
+					ori	$t3, $0, 0						#-- k: indice de petit_tableau
 				
-forforfor_lignes:											#--- on parcourt small_tab
-					lb 	$t5, small_tab($t3)					#--- $t5 = small_tab[i]
+forforfor_lignes:											#--- on parcourt petit_tableau
+					lb 	$t5, petit_tableau($t3)					#--- $t5 = petit_tableau[i]
 
-					bne 	$t4, $t5, no_problemo_lignes				#--- si tableau[ligne*9 + colonne] != small_tab[k] (i.e. si small_tab ne contient pas deja le chiffre en quesion)	-> pas de probleme
-					beqz 	$t5, no_problemo_lignes					#--- si small_tab[k] == 0 (i.e. si small_tab contient deja le chiffre, mais il s'agit d'un 0, c'est une case vide)	-> pas de probleme
+					bne 	$t4, $t5, no_problemo_lignes				#--- si tableau[ligne*9 + colonne] != petit_tableau[k] (i.e. si petit_tableau ne contient pas deja le chiffre en quesion)	-> pas de probleme
+					beqz 	$t5, no_problemo_lignes					#--- si petit_tableau[k] == 0 (i.e. si petit_tableau contient deja le chiffre, mais il s'agit d'un 0, c'est une case vide)	-> pas de probleme
 					j 	return_0						#--- sinon, on trouve un chiffre deux fois dans la meme ligne -> probleme trouve -> return 0
 no_problemo_lignes:				
 					addi 	$t3, $t3, 1						#--- k++
-					blt 	$t3, $t6, forforfor_lignes				#-- on parcourt small_tab de '0' à  'taille de small_tab'
+					blt 	$t3, $t6, forforfor_lignes				#-- on parcourt petit_tableau de '0' à  'taille de petit_tableau'
 					
-					bgt 	$t6, 8, max_neuf_lignes					#-- la taille de small_tab est incrementee sans dépasser 9 
+					bgt 	$t6, 8, max_neuf_lignes					#-- la taille de petit_tableau est incrementee sans dépasser 9 
 					addi 	$t6, $t6, 1
 
-max_neuf_lignes:			sb 	$t4, small_tab($t2)					#-- on met le chiffre dans small_tab
+max_neuf_lignes:			sb 	$t4, petit_tableau($t2)					#-- on met le chiffre dans petit_tableau
 					
 					addi 	$t2, $t2, 1						#-- j++
 					addi 	$t1, $t1, 1						#-- i++
@@ -244,37 +244,37 @@ max_neuf_lignes:			sb 	$t4, small_tab($t2)					#-- on met le chiffre dans small_
 
 
 #######################################################################################################
-					#check colonnes
+					#verifier colonnes
 					ori 	$t1, $0, 0						# $t1 = i: indice de la case (ligne*9 + colonne)
 for_colonnes:			
-					sw 	$0, small_tab						#-
-					sw 	$0, small_tab+4						#-
-					sb 	$0, small_tab+8						#- small_tab[9]=[];
-					ori 	$t6, $0, 1						#- $t6 = taille de small_tab
+					sw 	$0, petit_tableau					#-
+					sw 	$0, petit_tableau+4					#-
+					sb 	$0, petit_tableau+8					#- petit_tableau[9]=[];
+					ori 	$t6, $0, 1						#- $t6 = taille de petit_tableau
 					ori 	$t2, $0, 9						#- j: indice de la case de la ligne (colonne)
 					lb 	$t4, tab_fusion($t1)					#- $t4 = tab_fusion[i]
-					sb 	$t4, small_tab						#- (avant la boucle), on place un premier element dans small_tab
+					sb 	$t4, petit_tableau					#- (avant la boucle), on place un premier element dans petit_tableau
 					addi 	$t1, $t1, 9						#- on passe a l'element suivant
 					
 forfor_colonnes:
 					lb 	$t4, tab_fusion($t1)					#- $t4 = tab_fusion[i]
-					ori 	$t3, $0, 0						#-- k: indice de small_tab
+					ori 	$t3, $0, 0						#-- k: indice de petit_tableau
 				
-forforfor_colonnes:											#--- on parcourt small_tab
-					lb 	$t5, small_tab($t3)					#--- $t5 = small_tab[i]
+forforfor_colonnes:											#--- on parcourt petit_tableau
+					lb 	$t5, petit_tableau($t3)					#--- $t5 = petit_tableau[i]
 
-					bne 	$t4, $t5, no_problemo_colonnes				#--- si tableau[ligne*9 + colonne] != small_tab[k] (i.e. si small_tab ne contient pas deja le chiffre en quesion)	-> pas de probleme
-					beqz 	$t5, no_problemo_colonnes				#--- si small_tab[k] == 0 (i.e. si small_tab contient deja le chiffre, mais il s'agit d'un 0, c'est une case vide)	-> pas de probleme
+					bne 	$t4, $t5, no_problemo_colonnes				#--- si tableau[ligne*9 + colonne] != petit_tableau[k] (i.e. si petit_tableau ne contient pas deja le chiffre en quesion)	-> pas de probleme
+					beqz 	$t5, no_problemo_colonnes				#--- si petit_tableau[k] == 0 (i.e. si petit_tableau contient deja le chiffre, mais il s'agit d'un 0, c'est une case vide)	-> pas de probleme
 					j 	return_0						#--- sinon, on trouve un chiffre deux fois dans la meme ligne -> probleme trouve -> return 0
 no_problemo_colonnes:				
 					addi 	$t3, $t3, 1						#--- k++
-					blt 	$t3, $t6, forforfor_colonnes				#-- on parcourt small_tab de '0' à  'taille de small_tab'
+					blt 	$t3, $t6, forforfor_colonnes				#-- on parcourt petit_tableau de '0' à  'taille de petit_tableau'
 		
-					bgt 	$t6, 8, max_neuf_colonnes				#-- la taille de small_tab est incrementee sans dépasser 9
+					bgt 	$t6, 8, max_neuf_colonnes				#-- la taille de petit_tableau est incrementee sans dépasser 9
 					addi 	$t6, $t6, 1
 
 max_neuf_colonnes:			div 	$t7, $t2, 9						#-- $t7 = colonne = $t2 / 9
-					sb 	$t4, small_tab($t7)
+					sb 	$t4, petit_tableau($t7)
 					addi 	$t2, $t2, 9						#-- j+=9 (on se deplace sur une colonne (verticale <=> +9))
 					addi 	$t1, $t1, 9						#-- i+=9 (on se deplace sur une colonne (verticale <=> +9))
 					blt 	$t7, 8, forfor_colonnes
@@ -286,36 +286,36 @@ max_neuf_colonnes:			div 	$t7, $t2, 9						#-- $t7 = colonne = $t2 / 9
 
 
 #######################################################################################################
-					#check cellules
+					#verifier cellules
 					ori 	$t1, $0, 0						# $t = i: indice de la case (cellule*9 + colonne) 
 					ori 	$t2, $0, 0
 					ori 	$t3, $0, 0
 for1:
-					sw 	$0, small_tab						#-
-					sw 	$0, small_tab+4						#-
-					sb 	$0, small_tab+8						#- small_tab[9]=[];
-					ori 	$s1, $0, 0						#- $s1 = taille de small_tab
+					sw 	$0, petit_tableau					#-
+					sw 	$0, petit_tableau+4					#-
+					sb 	$0, petit_tableau+8					#- petit_tableau[9]=[];
+					ori 	$s1, $0, 0						#- $s1 = taille de petit_tableau
 
 					ori 	$t4, $0, 0
 					ori 	$t5, $0, 0
 					ori 	$t9, $0, 0
 for4:
 					lb 	$t7, tab_fusion($t1)					# $t7 = tab_fusion[i]
-					ori	$t6, $0, 0						#-- k: indice de small_tab				
-smalltab_cellules:											#--- on parcourt small_tab
-					lb 	$t8, small_tab($t6)
+					ori	$t6, $0, 0						#-- k: indice de petit_tableau				
+petit_tableau_cellules:											#--- on parcourt petit_tableau
+					lb 	$t8, petit_tableau($t6)
 
-					beqz 	$t8, no_problemo_cellules				#--- si small_tab[k] == 0 (i.e. si small_tab contient deja le chiffre, mais il s'agit d'un 0, c'est une case vide)	-> pas de probleme
-					bne 	$t7, $t8, no_problemo_cellules				#--- si tableau[ligne*9 + colonne] != small_tab[k] (i.e. si small_tab ne contient pas deja le chiffre en quesion)	-> pas de probleme
+					beqz 	$t8, no_problemo_cellules				#--- si petit_tableau[k] == 0 (i.e. si petit_tableau contient deja le chiffre, mais il s'agit d'un 0, c'est une case vide)	-> pas de probleme
+					bne 	$t7, $t8, no_problemo_cellules				#--- si tableau[ligne*9 + colonne] != petit_tableau[k] (i.e. si petit_tableau ne contient pas deja le chiffre en quesion)	-> pas de probleme
 					j 	return_0						#--- sinon, on trouve un chiffre deux fois dans la meme ligne -> probleme trouve -> return 0
 no_problemo_cellules:				
 					addi 	$t6, $t6, 1						#--- k++
-					blt 	$t6, $s1, smalltab_cellules
+					blt 	$t6, $s1, petit_tableau_cellules
 					
-					bgt 	$s1, 8, max_neuf_colonnes				#-- la taille de small_tab est incrementee sans dépasser 9
+					bgt 	$s1, 8, max_neuf_colonnes				#-- la taille de petit_tableau est incrementee sans dépasser 9
 					addi 	$s1, $s1, 1
 
-					sb 	$t7, small_tab($t9)					#-- on met le chiffre dans small_tab
+					sb 	$t7, petit_tableau($t9)					#-- on met le chiffre dans petit_tableau
 					addi 	$t9, $t9, 1
 					addi 	$t1, $t1, 1
 					addi 	$t5, $t5, 1
