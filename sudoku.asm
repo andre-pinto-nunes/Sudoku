@@ -294,6 +294,7 @@ for1:
 					sw 	$0, small_tab						#-
 					sw 	$0, small_tab+4						#-
 					sb 	$0, small_tab+8						#- small_tab[9]=[];
+					ori 	$s1, $0, 0						#- $s1 = taille de small_tab
 
 					ori 	$t4, $0, 0
 					ori 	$t5, $0, 0
@@ -309,7 +310,10 @@ smalltab_cellules:											#--- on parcourt small_tab
 					j 	return_0						#--- sinon, on trouve un chiffre deux fois dans la meme ligne -> probleme trouve -> return 0
 no_problemo_cellules:				
 					addi 	$t6, $t6, 1						#--- k++
-					blt 	$t6, 9, smalltab_cellules
+					blt 	$t6, $s1, smalltab_cellules
+					
+					bgt 	$s1, 8, max_neuf_colonnes				#-- la taille de small_tab est incrementee sans dépasser 9
+					addi 	$s1, $s1, 1
 
 					sb 	$t7, small_tab($t9)					#-- on met le chiffre dans small_tab
 					addi 	$t9, $t9, 1
