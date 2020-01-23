@@ -198,25 +198,25 @@ fin:
 # son
 					ori $v0, $0, 31				#
 					ori $a0, $0, 72				#
-					ori $a1, $0, 2000			#
+					ori $a1, $0, 1450			#
 					ori $a2, $0, 90				#
 					ori $a3, $0, 120			#
 					syscall					# son 1
 					
 					ori $v0, $0, 32				#
-					ori $a0, $0, 1000			#
+					ori $a0, $0, 250			#
 					syscall					# pause
 					
 					ori $v0, $0, 31				#
 					ori $a0, $0, 72				#
-					ori $a1, $0, 1000			#
+					ori $a1, $0, 1200			#
 					ori $a2, $0, 90				#
 					ori $a3, $0, 120			#
 					syscall					# son 1
 					
 					ori $v0, $0, 31				#
 					ori $a0, $0, 65				#
-					ori $a1, $0, 1000			#
+					ori $a1, $0, 1200			#
 					ori $a3, $0, 80				#
 					syscall					# son 2
 											
